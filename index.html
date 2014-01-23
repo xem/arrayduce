@@ -1,0 +1,177 @@
+<meta charset=utf-8>
+<a href=//github.com/xem/arrayduce><img style="position:absolute;top:0;right:0;border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<style>
+div{width:450px;margin:0 auto;text-align:center}
+pre{text-align:left}
+textarea{width:450px}
+</style>
+<div>
+<h1>Arrayduce</h1>
+So, you are a code golfer,
+<br>
+<br>
+and you have a big list of numbers:
+<br>
+<br>
+<pre>var list = </pre>
+<textarea id=before rows=30>[
+  65533,
+  8364,
+  8218,
+  402,
+  8222,
+  8230,
+  8224,
+  8225,
+  710,
+  8240,
+  352,
+  8249,
+  338,
+  381,
+  8216,
+  8217,
+  8220,
+  8221,
+  8226,
+  8211,
+  82121,
+  732,
+  8482,
+  353,
+  8250,
+  339,
+  382,
+  376
+]</textarea>
+<br>
+<br>
+and you want find the index of a number...
+<br>
+<br>
+<textarea rows=1 readonly>var value = 710;
+list.indexOf(value);</textarea>
+<br>
+<br>
+But it takes a lot of characters, right?
+<br>
+<br>
+Not anymore!
+<br>
+<br>
+Edit the array on top of this page, and click this button:
+<br>
+<br>
+<button id=b>Minify</button>
+<br>
+<br>
+<textarea id=mini rows=5 readonly></textarea>
+<br>
+<br>
+© 2014 - <a href=//xem.github.io/xem>xem</a>
+<br>
+<br>
+</div>
+<script>
+b.onclick=function(){
+  // Make an array
+  eval("list = " + before.value);
+
+  // The best solution
+  solution = "["+list.join(",")+"].indexOf(value)";
+
+  // Initial length
+  initial_length = solution.length;
+  
+  // Test if array values are unique
+  if(!array_has_unique_numbers(list)){
+    mini.value = "Your array can't have repeated values!";
+    return;
+  }
+  
+  // Range of the offset applied to value
+  offset_range = [-min(list), 1000];
+  
+  // Range of the modulo applied to value + offset
+  modulo_range = [1, min(list)];
+  
+  m=0;
+  // Loop on offsets
+  for(x = offset_range[0]; x < offset_range[1]; x++){
+    
+    // Loop on modulos
+    for(y = modulo_range[0]; y < modulo_range[1]; y++){
+    
+      // Reset temp array
+      tmp = [];
+      
+      // Loop on values
+      for(z = 0; z < list.length; z++){
+        
+        // Add value + offset % modulo to temp array
+        tmp.push((list[z] + x) % y);
+      }
+      
+      // Test uniqueness of temp array values
+      if(array_has_unique_numbers(tmp)){
+      
+        // If OK, save itt as the best solution if it's shorter than the existing one
+        tmp = ("["+tmp.join(",")+"].indexOf("+(x?"(":"")+"value"+(x?x<0?x:"+"+x:"")+(x?")":"")+"%"+y+")");
+        if(tmp.length < solution.length){
+          solution = tmp;
+        }
+      }
+      i++;
+    }
+  }
+  
+  mini.value = "// This code saves you "+(initial_length - solution.length)+" characters\n\n";
+  mini.value += solution;
+}
+
+// Test uniqueness of array values
+array_has_unique_numbers = function(a){
+  for(i = 0; i < a.length; i++){
+    for(j = i; j < a.length; j++){
+      if(j>i){
+        if(a[i] == a[j]){
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+// Get length of text representation of array
+length = function(a){
+  return a.join(",").length;
+}
+
+// Get min value in array
+min = function(a){
+  m = Infinity;
+  for(i = 0; i < a.length; i++){
+    if(a[i] < m){
+      m = a[i];
+    }
+  }
+  return m
+}
+
+// Get max value in array
+max = function(a){
+  m = -Infinity;
+  for(i = 0; i < a.length; i++){
+    if(a[i] > m){
+      m = a[i];
+    }
+  }
+  return m
+}
+
+// Reset
+onload = function(){
+  mini.value = "";
+}
+</script>
