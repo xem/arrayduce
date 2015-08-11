@@ -1,1 +1,1 @@
-http://xem/github.io/arrayduce
+http://xem.github.io/arrayduce
